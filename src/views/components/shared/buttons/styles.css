@@ -1,0 +1,90 @@
+.addMore,
+.addRound,
+.remove,
+.cancel,
+.save,
+.editRound,
+.change,
+.edit {
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 28px;
+  color: #f37500;
+  position: relative;
+  padding-right: 40px;
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding-left: 0;
+}
+.addMore:focus,
+.addRound:focus,
+.editRound:focus,
+.remove:focus,
+.cancel:focus,
+.save:focus,
+.change:focus,
+.edit:focus {
+  box-shadow: none;
+}
+.addMore::after,
+.addRound::after,
+.editRound::after,
+.remove::after {
+  content: "";
+  background-image: url("./images/addIcon.svg");
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.remove::after {
+  content: "";
+  background-image: url("./images/removeIcon.svg");
+}
+.editRound::after {
+  content: "";
+  width: 30px;
+  height: 30px;
+  background-image: url("./images/edit-round.svg");
+}
+.addRound::after {
+  content: "";
+  width: 30px;
+  height: 30px;
+  background-image: url("./images/add-round.svg");
+}
+.cancel,
+.save {
+  height: 48px;
+  background-color: #ffffff;
+  border: 1px solid #f37500;
+  color: #f37500;
+  box-sizing: border-box;
+  padding: 0 20px;
+  width: 100%;
+  text-align: center;
+  display: block;
+  font-weight: bold;
+}
+.save {
+  border: none;
+  color: #fff;
+  background-color: #f37500;
+  width: 100%;
+  text-align: center;
+  display: block;
+}
+.change,
+.edit {
+  padding: 0;
+}
+.change {
+  color: #0059a3;
+}
+.disabled {
+  opacity: 0.6;
+}

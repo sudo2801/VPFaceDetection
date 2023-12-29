@@ -1,0 +1,1 @@
+export const DEATAIL_ROUTE = "/deatils"
