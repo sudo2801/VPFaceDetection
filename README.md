@@ -2,6 +2,15 @@
 
 Welcome to the Video Player with Face Detection project! This project combines the power of React, Fabric.js, and Face-api.js to create a video player with real-time facial detection.
 
+#Features
+
+Video Upload: Users can upload a video using the input tag.
+Fabric.js Integration: Utilizes Fabric.js to manage the canvas and video elements.
+Face-api.js Integration: Implements facial detection within the video using Face-api.js.
+Video Player Interface: Design includes play/pause controls for a seamless user experience.
+Face Detection with Fabric.js: Draws rectangles around detected faces using Fabric.js.
+User Interaction: Real-time face detection on the canvas while playing the uploaded video
+
 ## Project Setup
 
 ### Installation
