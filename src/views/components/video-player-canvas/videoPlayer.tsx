@@ -10,7 +10,7 @@ interface VideoPlayerProps {
 
 const VideoPlayer: FC<VideoPlayerProps> = ({ selectedVideo }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | undefined>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null);
 

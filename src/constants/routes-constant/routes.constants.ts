@@ -1,1 +1,1 @@
-export const DEATAIL_ROUTE = "/deatils"
+// export const DEATAIL_ROUTE = "/deatils"
