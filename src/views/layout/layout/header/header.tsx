@@ -9,7 +9,7 @@ export const Header: FC<HeaderProps> = memo(() => {
 
             bg-[linear-gradient(to_right,theme(colors.indigo.400),theme(colors.indigo.100),theme(colors.sky.400),theme(colors.fuchsia.400))]"
       >
-        ...QuickFace Detecto...
+        ...QuickFace Detector...
       </p>
       {/* <span  class="text-6xl md:text-4xl font-extrabold bg-clip-text"> 🚀</span> */}
     </header>
