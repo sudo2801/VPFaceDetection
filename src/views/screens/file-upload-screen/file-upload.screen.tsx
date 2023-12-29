@@ -5,11 +5,15 @@ import FileUpload from "@/views/components/fileUpload/fileUpload";
 
 
 export const FileUploadScreen: FC<any> = withLayout(() => {
-   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+  
     return (
-      <div className="flex flex-col justify-center items-center sm:m-3">
-        <FileUpload setSelectedVideo={setSelectedVideo} />
-        <VideoPlayer selectedVideo={selectedVideo} />
+      <div className="flex flex-col justify-center items-center">
+       {!selectedVideo && <FileUpload setSelectedVideo={setSelectedVideo} />}
+        <VideoPlayer
+          selectedVideo={selectedVideo}
+          setSelectedVideo={setSelectedVideo}
+        />
       </div>
     );
   }

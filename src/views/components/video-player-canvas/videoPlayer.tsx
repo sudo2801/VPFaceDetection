@@ -6,9 +6,13 @@ import { CButton } from "../shared/buttons";
 
 interface VideoPlayerProps {
   selectedVideo: File | null;
+  setSelectedVideo:Function
 }
 
-const VideoPlayer: FC<VideoPlayerProps> = ({ selectedVideo }) => {
+const VideoPlayer: FC<VideoPlayerProps> = ({
+  selectedVideo,
+  setSelectedVideo,
+}) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -44,11 +48,12 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ selectedVideo }) => {
             videoRef.current,
             new faceapi.TinyFaceDetectorOptions()
           )
-          .withFaceLandmarks()
-          .withFaceExpressions();
-
-        // Clear the previous drawings on the canvas
+          .withFaceLandmarks();
         const canvas = canvasRef.current;
+        const displaySize: faceapi.IDimensions = {
+          width: videoRef.current.offsetWidth,
+          height: videoRef.current.offsetHeight,
+        };
 
         if (canvas) {
           const context = canvas.getContext("2d");
@@ -58,15 +63,9 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ selectedVideo }) => {
         }
 
         // DRAW YOUR FACE IN WEBCAM
-        faceapi.matchDimensions(canvasRef.current, {
-          width: 400,
-          height: 400,
-        });
+        faceapi.matchDimensions(canvasRef.current, displaySize);
 
-        const resized = faceapi.resizeResults(detections, {
-          width: 400,
-          height: 400,
-        });
+        const resized = faceapi.resizeResults(detections, displaySize);
 
         faceapi.draw.drawDetections(canvasRef.current, resized);
       }
@@ -79,18 +78,21 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ selectedVideo }) => {
   const handleOnClickPause = () => {
     videoRef.current && videoRef.current.pause();
   };
+  const handleNewVideo = () => {
+    videoRef.current = null;
+    canvasRef.current = null;
+    setSelectedVideo(null)
+  };
 
   return (
     <div>
       {selectedVideo && (
         <>
-          <div>
+          <div className="relative mt-10">
             <video
-              className="rounded-md border-4 border-violet-600"
+              className="rounded-md border-4 border-violet-600 w-[400px] h-[350px] sm:m-2"
               ref={videoRef}
               autoPlay
-              width="640"
-              height="480"
             >
               <source
                 src={URL.createObjectURL(selectedVideo)}
@@ -106,24 +108,28 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ selectedVideo }) => {
                 type="primary"
               />
               <CButton
+                label="Upload New Video"
+                onClick={handleNewVideo}
+                type="dark"
+              />
+              <CButton
                 label="Pause"
                 onClick={handleOnClickPause}
                 type="secondary"
               />
             </div>
+            <canvas
+              ref={canvasRef}
+              width="640"
+              height="480"
+              style={{
+                position: "absolute",
+                zIndex: 1,
+                cursor: "pointer",
+                top: 0,
+              }}
+            />
           </div>
-
-          <canvas
-            ref={canvasRef}
-            width="640"
-            height="480"
-            style={{
-              position: "absolute",
-              zIndex: 1,
-              cursor: "pointer",
-              top: 0,
-            }}
-          />
         </>
       )}
     </div>

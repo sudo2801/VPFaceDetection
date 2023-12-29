@@ -12,12 +12,14 @@ const FileUpload: FC<FileUploadProps> = ({ setSelectedVideo }) => {
   return (
     <div>
       <input
+        id="file-input-label"
         type="file"
         accept="video/*"
         onChange={(e: any) =>
           handleVideoUpload(e.target.files ? e.target.files[0] : null)
         }
-              className="file:bg-gradient-to-b file:from-blue-500 file:to-blue-600
+        className="
+        file:bg-gradient-to-b file:from-blue-500 file:to-blue-600
                file:px-7 file:py-3 file:m-5
                file:border-none
                file:rounded-full
@@ -27,7 +29,6 @@ const FileUpload: FC<FileUploadProps> = ({ setSelectedVideo }) => {
                text-white
                rounded-full
                cursor-pointer
-
               "
       />
     </div>
