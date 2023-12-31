@@ -1,0 +1,1 @@
+export {loadModels} from "./face-api.service"

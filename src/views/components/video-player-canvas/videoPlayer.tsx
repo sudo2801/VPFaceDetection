@@ -1,8 +1,9 @@
 // VideoPlayer.tsx
-import { useRef, useState, useLayoutEffect, FC } from "react";
+import { useRef, useState, FC, useEffect } from "react";
 import { fabric } from "fabric";
 import * as faceapi from "face-api.js";
 import { CButton } from "../shared/buttons";
+import { loadModels } from "@/services/face-api-service";
 
 interface VideoPlayerProps {
   selectedVideo: File | null;
@@ -18,59 +19,53 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
 
   const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    const loadModelsAndDetect = async () => {
+      await loadModels();
+
+      intervalId = setInterval(async () => {
+        if (videoRef.current && canvasRef.current) {
+          const detections = await faceapi
+            .detectAllFaces(
+              videoRef.current,
+              new faceapi.TinyFaceDetectorOptions()
+            )
+            .withFaceLandmarks();
+          const canvas = canvasRef.current;
+          const displaySize: faceapi.IDimensions = {
+            width: videoRef.current.offsetWidth,
+            height: videoRef.current.offsetHeight,
+          };
+
+          if (canvas) {
+            const context = canvas.getContext("2d");
+            if (context) {
+              context.clearRect(0, 0, canvas.width, canvas.height);
+            }
+          }
+
+          // DRAW YOUR FACE IN WEBCAM
+          faceapi.matchDimensions(canvasRef.current, displaySize);
+
+          const resized = faceapi.resizeResults(detections, displaySize);
+
+          faceapi.draw.drawDetections(canvasRef.current, resized);
+        }
+      }, 500);
+    };
+
     if (!fabricCanvas && canvasRef.current) {
       const canvas = new fabric.Canvas(canvasRef.current);
       setFabricCanvas(canvas);
     }
-    faceMyDetect();
-    loadModels();
-  }, []);
 
-  const loadModels = async () => {
-    try {
-      await Promise.all([
-        faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
-        faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-        faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-        faceapi.nets.faceExpressionNet.loadFromUri("/models"),
-      ]);
-    } catch (error) {
-      console.error("Error loading faceapi models:", error);
-    }
-  };
+    loadModelsAndDetect();
 
-  const faceMyDetect = () => {
-    setInterval(async () => {
-      if (videoRef.current && canvasRef.current) {
-        const detections = await faceapi
-          .detectAllFaces(
-            videoRef.current,
-            new faceapi.TinyFaceDetectorOptions()
-          )
-          .withFaceLandmarks();
-        const canvas = canvasRef.current;
-        const displaySize: faceapi.IDimensions = {
-          width: videoRef.current.offsetWidth,
-          height: videoRef.current.offsetHeight,
-        };
-
-        if (canvas) {
-          const context = canvas.getContext("2d");
-          if (context) {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-          }
-        }
-
-        // DRAW YOUR FACE IN WEBCAM
-        faceapi.matchDimensions(canvasRef.current, displaySize);
-
-        const resized = faceapi.resizeResults(detections, displaySize);
-
-        faceapi.draw.drawDetections(canvasRef.current, resized);
-      }
-    }, 500);
-  };
+    return () => {
+      clearInterval(intervalId); // To prevent memory leak
+    };
+  }, [fabricCanvas]); 
 
   const handleOnClickPlay = () => {
     videoRef.current && videoRef.current.play();
